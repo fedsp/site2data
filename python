@@ -1,0 +1,30 @@
+https://www.candywarehouse.com
+https://www.candynation.com
+https://www.dulanscandybar.com
+https://www.justcandy.com
+https://www.justcandy.com
+https://www.sugarfina.com
+https://www.candystore.com
+https://candyfunhouse.ca
+https://www.bulkcandystore.com
+https://www.sweetpetescandy.com
+https://itsugar.com
+https://thecandystoreonline.co.uk
+https://www.sees.com
+https://candystoreforme.com
+https://oldtimecandy.com
+https://candytime.com.au
+https://www.candyfavourites.com
+https://vermontcountrystore.com
+https://www.lollywarehouse.com.au
+import setup
+from scrapping_service import ScrappingService
+
+
+def main():
+    import sys
+    print(sys.argv)
+    for website in websites:
+        scrapping_obj = ScrappingService('https://www.google.com')
+
+main()
