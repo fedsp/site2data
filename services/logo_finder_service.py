@@ -14,6 +14,11 @@ class LogoFinderService():
             if image_address != None:
                 if self.scrapping_settings['LogoTextIdentifier'] in image_address.lower():
                     logos.append(image_address)
+            if 'class' in image.attrs:
+                classnames = image.attrs['class']
+                for classname in classnames:
+                    if self.scrapping_settings['LogoTextIdentifier'] in classname.lower():
+                        logos.append(image_address)
                 
         if len(logos) == 0:
             return ("LOGO NOT FOUND")
