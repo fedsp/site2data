@@ -22,6 +22,7 @@ Run the following command to mount your container
 docker build . -t site2data
 ```
 Run the container passing the stdin input
+
 Windows:
 ```sh
 type C:\Pathtomyfile\websites_test.txt | docker run -i  site2data
