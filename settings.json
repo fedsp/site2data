@@ -1,11 +1,20 @@
 {
     "ScrappingSettings":{
+        "BrowserUserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36",
         "LogoTextIdentifier":"logo",
         "ContactIdentifier":"contact",
         "PossibleTextParents":["head","meta","script","style", "title"],
         "PhoneRegexList":[
-            "^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$"
-        ]
+            "^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$",
+            "^[a-zA-Z]*\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$",
+            "^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{5})[-. )]*(\\d{3})[-. ]*(\\d{3})(?: *x(\\d+))?\\s*$",
+            "^[a-zA-Z]*\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{5})[-. )]*(\\d{3})[-. ]*(\\d{3})(?: *x(\\d+))?\\s*$",
+            "^\\s*\\(*(?:\\+?(\\d{1,3}))*\\)*?[-. (]*(\\d{4})[-. )]*(\\d{4})[-. ]*\\s*$",
+            "^[a-zA-Z]*\\s*\\(*(?:\\+?(\\d{1,3}))*\\)*?[-. (]*(\\d{4})[-. )]*(\\d{4})[-. ]*\\s*$"
+        ],
+        "AbsoluteVsRelativeRegexChecker":"^(?:[a-z]+:)?//"
     },
-    "ChromeDriverBinLocation":"D:\\orthos\\projects\\site2data\\bin\\chromedriver.exe"
+    "ChromeDriverBinLocation":"D:\\orthos\\projects\\site2data\\bin\\chromedriver.exe",
+    "MaxParallelSessions":20,
+    "SleepTimeToLoadJavascript":4
 }

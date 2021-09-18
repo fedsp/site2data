@@ -1,59 +1,78 @@
+from repositories.log_repository import LogItem
 import config
 from scrapping_service import ScrappingService
 from scrapping_result_repository import ResultRepository,ScrappingResult
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from log_repository import LogRepository,LogItem
 from concurrent.futures import ThreadPoolExecutor
 import sys
 result_repo = ResultRepository()
+log_repo = LogRepository()
+import json
+import traceback
 
-
-def main(website):    
-    chrome_options = Options()
-    userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
-    chrome_options.add_argument(f'user-agent={userAgent}')
-    #chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--headless")
-    driver = webdriver.Chrome(
-        executable_path=config.settings['ChromeDriverBinLocation'],
-        options=chrome_options
-    )
-    scrapping_obj = ScrappingService(
-        website_url=website,
-        driver=driver)
-    if scrapping_obj.valid == False:
-        result_repo.add_new_item(
-            ScrappingResult(
-                website=website,
-                phones="SITE NOT FOUND",
-                logo="SITE NOT FOUND"
+def main(website):  
+    try:
+        scrapping_obj = ScrappingService(website_url=website)
+        if scrapping_obj.check_if_website_exists == False:
+            result_repo.add_new_item(
+                ScrappingResult(
+                    website=website,
+                    phones="SITE NOT FOUND",
+                    logo="SITE NOT FOUND"
+                )
             )
-        )
-    else:
-        scrapping_obj.scrap()
-        result_repo.add_new_item(
-            ScrappingResult(
-                website=website,
-                phones=scrapping_obj.phones,
-                logo=scrapping_obj.logo
+        else:
+            scrapping_obj.scrap()
+            result_repo.add_new_item(
+                ScrappingResult(
+                    website=website,
+                    phones=scrapping_obj.phones,
+                    logo=scrapping_obj.logo
+                )
             )
+    except(Exception) as err:
+        result_repo.add_new_item(
+                ScrappingResult(
+                    website=website,
+                    phones="ERROR. SEE LOG FOR DETAILS",
+                    logo="ERROR. SEE LOG FOR DETAILS"
+                )
         )
+        log_repo.add_new_item(
+            LogItem(
+                    website=website,
+                    message_content=str(traceback.format_exc())
+                )
+        )
+        
 
-    
-def multithreading(func, args, workers):
+def multi_threading(func, args, workers):
     with ThreadPoolExecutor(workers) as ex:
         res = ex.map(func, args)
     return list(res)
 
 def multi_run(website_list):
-    multithreading(main, website_list, 20)
-    x = ""
+    website_list = [item.replace('\n','') for item in website_list]
+    multi_threading(main, website_list, config.settings['MaxParallelSessions'])
+    log_repo.save_log()
+    print("Results: \n")
+    json_list = []
+    for item in result_repo.result_list:
+        dict_to_be_printed = {
+            "logo":item.logo,
+            "phones":item.phones,
+            "website":item.website,
+            }
+        print(dict_to_be_printed)
+    ###############################################################
+    #If you want to debug the output as a json uncomment this block
+        #json_list.append(dict_to_be_printed)   
+    # with open('./result.json','w') as jsonfile:
+    #     json.dump(json_list,jsonfile)
+    ###############################################################    
 
 if __name__=='__main__':
     website_list = []
     for line in sys.stdin:
         website_list.append(line)
-    multithreading(main, website_list, 20)
-    x = ""
-    #main(website_list)
+    multi_run(website_list)

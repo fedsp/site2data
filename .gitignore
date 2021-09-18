@@ -130,5 +130,5 @@ dmypy.json
 .pyre/
 
 .vscode/
-bin/chromedriver.exe
-
+log/
+result.json
